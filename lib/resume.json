@@ -1,0 +1,89 @@
+{
+    "name": "Joseph R. Click",
+    "location": "San Diego, California",
+    "email": "josephrclick@gmail.com",
+    "phone": "(858) 366-8097",
+    "summary": "Technical sales engineer with experience leading presales engagements, managing proof of concepts, and bridging technical and business requirements across diverse enterprise environments.",
+    "skills": [
+      "Complex Sales Strategy",
+      "Proof of Concept Management",
+      "Technical Demo Development",
+      "Python, JavaScript, SQL, CSS, HTML",
+      "APIs, LLMs, Docker",
+      "AWS, Azure, GCP",
+      "SIEMs, Data Warehouses",
+      "Salesforce Marketing Cloud & CRM",
+      "Mobile App SDK Deployment",
+      "PowerBI, Tableau, Snowflake"
+    ],
+    "work_experience": [
+      {
+        "company": "Contentsquare",
+        "role": "Sr. Presales Solutions Consultant",
+        "location": "Remote",
+        "start_date": "September 2022",
+        "end_date": "Present",
+        "responsibilities": [
+          "Designed and delivered custom software demos addressing client-specific pain points.",
+          "Led end-to-end Proof of Concept projects to demonstrate ROI.",
+          "Integrated advanced REST APIs and cloud platforms including Salesforce, Shopify, Databricks.",
+          "Collaborated cross-functionally with engineering and product teams.",
+          "Supported sales teams and influenced product roadmap through advisory boards."
+        ]
+      },
+      {
+        "company": "Dassault Systemes - BIOVIA",
+        "role": "Customer Success Engineering Manager",
+        "location": "San Diego, CA",
+        "start_date": "March 2020",
+        "end_date": "September 2022",
+        "responsibilities": [
+          "Served as SME in presales engagements and bridged technical and business needs.",
+          "Handled technical implementations with focus on security, identity, and PII.",
+          "Managed a team of technical engineers and developed a culture of customer focus."
+        ]
+      },
+      {
+        "company": "Dassault Systemes - BIOVIA",
+        "role": "Technical Solutions Engineer - CISPro",
+        "location": "San Diego, CA",
+        "start_date": "August 2015",
+        "end_date": "March 2020",
+        "responsibilities": [
+          "Led enterprise implementation projects involving complex infrastructure and IAM.",
+          "Delivered presentations and technical documentation for high-stakes sales engagements.",
+          "Created training materials and best practices guides."
+        ]
+      },
+      {
+        "company": "Various Roles and Industries",
+        "role": "Diverse Professional Experience",
+        "location": "San Diego, CA",
+        "start_date": "May 2001",
+        "end_date": "August 2015",
+        "responsibilities": [
+          "Worked in law firms, startups, web development, logistics, and sole proprietorship.",
+          "Published a book and built experience across legal, tech, and business domains."
+        ]
+      }
+    ],
+    "education": [
+      {
+        "degree": "MBA \u2013 Information Technology Management",
+        "institution": "Western Governors University",
+        "year": 2021
+      },
+      {
+        "degree": "BS \u2013 Information Technology",
+        "institution": "Western Governors University",
+        "year": 2019
+      }
+    ],
+    "certifications": [
+      "CompTIA A+",
+      "Network+",
+      "Project+",
+      "ITIL Foundations",
+      "Site Development Associate"
+    ]
+  }
