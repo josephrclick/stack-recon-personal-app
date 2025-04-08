@@ -10,6 +10,17 @@ const supabase = createClient(
 
 const openai = new OpenAI({ apiKey: process.env.NEXT_OPENAI_API_KEY });
 
+export function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS'
+    }
+  });
+}
+
 export async function POST(req: NextRequest) {
   const apiKey = req.headers.get('x-api-key');
   if (apiKey !== process.env.NEXT_EXTENSION_API_KEY) {
@@ -89,7 +100,15 @@ Return JSON:
       return NextResponse.json({ error: 'Supabase insert failed', details: insert.error }, { status: 500 });
     }
 
-    return NextResponse.json({ success: true, job: insert.data });
+    return new NextResponse(JSON.stringify({ success: true, job: insert.data }), {
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+        'Access-Control-Allow-Methods': 'POST, OPTIONS'
+      }
+    });
+    
   } catch (error) {
     console.error('Error in processing job:', error);
     return NextResponse.json({ error: 'Failed to process job', details: error }, { status: 500 });

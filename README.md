@@ -1,104 +1,97 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# 💼 AI Job Hunt Dashboard (Next.js + Supabase Edition)
 
-<p align="center">
- The fastest way to build apps with Next.js and Supabase
-</p>
+This is a personal, single-user AI-powered job hunting tool built with **Next.js**, **Supabase**, and **OpenAI**. It automates the job application workflow—scraping job posts, enriching them with GPT-4o, and storing clean structured data for dashboard management and resume generation.
 
-<p align="center">
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
-  <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
-  <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
-</p>
-<br/>
+---
 
-## Features
+## 🧱 Stack Overview
 
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+| Layer       | Tech Stack                                |
+|------------|--------------------------------------------|
+| Frontend   | Next.js (App Router, TypeScript)           |
+| Hosting    | Vercel                                     |
+| Database   | Supabase (PostgreSQL + RLS)                |
+| Auth       | Supabase Magic Link (Single user)          |
+| AI         | OpenAI API (GPT-4o)                        |
+| Ingestion  | Chrome Extension → `/api/ingest-job`       |
+| Resume     | JSON file injected into GPT prompt context |
+| Logging    | Debug output via `console.log` to Vercel Logs |
 
-## Demo
+---
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+## 📦 Features (Completed)
 
-## Deploy to Vercel
+- ✅ Fully hosted on Vercel with GitHub sync
+- ✅ Supabase schema created with `jobs` table
+- ✅ `resume.json` generated from PDF, stored in `/lib/`
+- ✅ `/api/ingest-job` API endpoint built using App Router (`route.ts`)
+- ✅ GPT-4o generates structured job analysis with:
+  - Title, Company, Summary, Requirements
+  - Resume tips (strengths, gaps, suggested bullets)
+- ✅ Markdown formatting from GPT is sanitized before parsing
+- ✅ Records are inserted into Supabase with all enriched fields
 
-Vercel deployment will guide you through creating a Supabase account and project.
+---
 
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
+## 🥪 Current Dev Status
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
+✅ POST requests work via Postman  
+✅ Job posts appear in Supabase with full AI-enriched metadata  
+🔜 Next up: integrate existing Chrome Extension
 
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
+---
 
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
+## 🔧 Next Steps
 
-## Clone and run locally
+### 🔹 1. Chrome Extension Integration (in progress)
+- Connect extension POST logic to `/api/ingest-job`
+- Send `html`, `url`, and `source` with `x-api-key` header
+- Confirm end-to-end record insertion from browser job page scrape
 
-1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
+### 🔹 2. Data Enrichment Strategy
+- Expand GPT prompt to pull out more useful fields:
+  - Company mission, industry, red flags, values
+  - Ideal interview talking points
+  - Fit score or urgency rating
+- Potential for multi-step prompts or re-processing with another model
 
-2. Create a Next.js app using the Supabase Starter template npx command
+### 🔹 3. Dashboard UI (Next phase)
+- Build authenticated route to view and manage jobs
+- Filter/sort by `status`, `ai_score`, company, etc.
+- Add “Generate Resume” button → tailored GPT + PDF output
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
+---
 
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
+## 💡 Philosophy
 
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
+This project is intentionally **solo-use**, ultra-streamlined, and optimized for speed. No user management. No multi-tenant support. Just one highly efficient human working smarter than the rest.
 
-3. Use `cd` to change into the app's directory
+---
 
-   ```bash
-   cd with-supabase-app
-   ```
+## 📁 Project File Map (Key Files)
 
-4. Rename `.env.example` to `.env.local` and update the following:
+```
+/app/api/ingest-job/route.ts   → API endpoint for ingesting HTML
+/lib/resume.json               → Structured resume for GPT context
+.env.local                     → OpenAI key, Supabase keys, API key
+/pages/                        → Future dashboard views
+/supabase/                     → Managed via web UI
+```
 
-   ```
-   NEXT_PUBLIC_SUPABASE_URL=[INSERT SUPABASE PROJECT URL]
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=[INSERT SUPABASE PROJECT API ANON KEY]
-   ```
+---
 
-   Both `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` can be found in [your Supabase project's API settings](https://app.supabase.com/project/_/settings/api)
+## 🔐 .env Variables
 
-5. You can now run the Next.js local development server:
+```env
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+OPENAI_API_KEY=...
+EXTENSION_API_KEY=sk-ext_xxxxxxxxxxxxxxxxx
+```
 
-   ```bash
-   npm run dev
-   ```
+---
 
-   The starter kit should now be running on [localhost:3000](http://localhost:3000/).
+## 🤝 Contributions
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+Not open to public contributions—this is a personal R&D lab. But I’ll probably build a product out of it later 🤪
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
-
-## Feedback and issues
-
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
-
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
