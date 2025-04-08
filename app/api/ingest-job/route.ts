@@ -24,7 +24,11 @@ export function OPTIONS() {
 export async function POST(req: NextRequest) {
   const apiKey = req.headers.get('x-api-key');
   if (apiKey !== process.env.NEXT_EXTENSION_API_KEY) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+} });
   }
 
   let html, url, source;
@@ -35,11 +39,19 @@ export async function POST(req: NextRequest) {
     source = body.source || 'unknown';
 
     if (!html || !url) {
-      return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+      return new NextResponse(JSON.stringify({ error: 'Missing required fields' }), { status: 400, headers: {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+} });
     }
   } catch (err) {
     console.error('Error parsing JSON body:', err);
-    return NextResponse.json({ error: 'Invalid JSON body', details: err }, { status: 400 });
+    return new NextResponse(JSON.stringify({ error: 'Invalid JSON body', details: err }), { status: 400, headers: {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+} });
   }
 
   const prompt = `You are an AI job analyst. Given the job post HTML and resume, extract key fields and provide resume tailoring insights. Return ONLY valid JSON. Do NOT include markdown or backticks.
@@ -97,7 +109,11 @@ Return JSON:
 
     if (insert.error) {
       console.error('Supabase insert error:', insert.error);
-      return NextResponse.json({ error: 'Supabase insert failed', details: insert.error }, { status: 500 });
+      return new NextResponse(JSON.stringify({ error: 'Supabase insert failed', details: insert.error }), { status: 500, headers: {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+} });
     }
 
     return new NextResponse(JSON.stringify({ success: true, job: insert.data }), {
@@ -111,6 +127,10 @@ Return JSON:
     
   } catch (error) {
     console.error('Error in processing job:', error);
-    return NextResponse.json({ error: 'Failed to process job', details: error }, { status: 500 });
+    return new NextResponse(JSON.stringify({ error: 'Failed to process job', details: error }), { status: 500, headers: {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+} });
   }
 }
