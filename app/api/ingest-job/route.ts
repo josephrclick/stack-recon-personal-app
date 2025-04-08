@@ -84,7 +84,7 @@ Return JSON:
 
   try {
     const chat = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4o-mini',
       messages: [
         { role: 'system', content: 'You are a job intelligence assistant.' },
         { role: 'user', content: prompt }
@@ -103,7 +103,7 @@ Return JSON:
       job_post_url: url,
       source,
       raw_html: html,
-      ai_version: 'gpt-4o-v1',
+      ai_version: 'gpt-4o-mini-v1',
       status: 'new'
     }).select().single();
 

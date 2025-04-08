@@ -25,7 +25,7 @@ This is a personal, single-user AI-powered job hunting tool built with **Next.js
 - ✅ Supabase schema created with `jobs` table
 - ✅ `resume.json` generated from PDF, stored in `/lib/`
 - ✅ `/api/ingest-job` API endpoint built using App Router (`route.ts`)
-- ✅ GPT-4o generates structured job analysis with:
+- ✅ GPT-4o-mini generates structured job analysis with:
   - Title, Company, Summary, Requirements
   - Resume tips (strengths, gaps, suggested bullets)
 - ✅ Markdown formatting from GPT is sanitized before parsing
