@@ -34,10 +34,6 @@ export async function POST(req: NextRequest) {
 
   const body = await req.json();
 
-  console.log('📦 Received payload:', body);
-
-  
-
   const {
     job_post_url,
     job_title,
@@ -113,24 +109,31 @@ Return JSON with:
     });
   }
 
-  const { data, error } = await supabase.from('jobs').insert([{ ...structured }]);
-  if (error) {
-    console.error('OpenAI response:', completion.choices[0].message.content);
-    console.log('Supabase insert error:', error);
-    return NextResponse.json({ error: 'DB error' }, {
-      status: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
-    });
-  }
-
-  return NextResponse.json({ success: true, data }, {
-    headers: {
-      'Access-Control-Allow-Origin': '*'
-    }
-  });
+  try {
+    const cleaned = Object.fromEntries(
+      Object.entries(structured).filter(([_, v]) => v !== undefined)
+    );
   
+    const { data, error } = await supabase.from('jobs').insert([cleaned]);
+  
+    if (error) {
+      console.error('🧱 Supabase insert error:', error);
+      return NextResponse.json({ error: 'DB insert failed', details: error.message }, {
+        status: 500,
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+  
+    return NextResponse.json({ success: true, data }, {
+      headers: { 'Access-Control-Allow-Origin': '*' }
+    });
+  } catch (err) {
+    console.log('🔥 Insert crash:', err);
+    return NextResponse.json({ error: 'Unhandled insert error' }, {
+      status: 500,
+      headers: { 'Access-Control-Allow-Origin': '*' }
+    });
+  }  
 }
 
 export function OPTIONS() {
