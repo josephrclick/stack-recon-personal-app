@@ -3,6 +3,12 @@ import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 import resume from '@/lib/resume.json';
 
+function extractJSON(raw: string): any {
+  const match = raw.match(/{[\s\S]*}/);
+  if (!match) throw new Error('No JSON block found');
+  return JSON.parse(match[0]);
+}
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -38,15 +44,6 @@ export async function POST(req: NextRequest) {
     company_url,
     company_linkedin_slug
   } = body;
-
-  console.log('📦 Received payload:', body);
-
-  console.log({
-    job_description,
-    job_post_url,
-    source,
-    job_description_type: typeof job_description,
-  });
 
   const isValid = [job_description, job_post_url, source].every(
     (v) => typeof v === 'string' && v.trim().length > 0
@@ -102,16 +99,13 @@ Return JSON with:
 
   let structured;
   try {
-    structured = JSON.parse(completion.choices[0].message.content || '{}');
+    structured = extractJSON(completion.choices[0].message.content || '');
   } catch (e) {
-    
+    console.error('❌ Failed to parse JSON from OpenAI:', completion.choices[0].message.content);
     return NextResponse.json({ error: 'Failed to parse AI response' }, {
       status: 500,
-      headers: {
-        'Access-Control-Allow-Origin': '*'
-      }
+      headers: { 'Access-Control-Allow-Origin': '*' }
     });
-    
   }
 
   const { data, error } = await supabase.from('jobs').insert([{ ...structured }]);
