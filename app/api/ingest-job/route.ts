@@ -13,7 +13,12 @@ const openai = new OpenAI({ apiKey: process.env.NEXT_OPENAI_API_KEY });
 export async function POST(req: NextRequest) {
   const apiKey = req.headers.get('x-api-key');
   if (apiKey !== process.env.NEXT_EXTENSION_API_KEY) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    return NextResponse.json({ error: 'Unauthorized' }, {
+      status: 401,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
   }
 
   const body = await req.json();
