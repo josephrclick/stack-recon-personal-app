@@ -49,7 +49,13 @@ export async function POST(req: NextRequest) {
 
   if (!isValid) {
     console.warn('🚨 Missing or invalid fields:', { job_description, job_post_url, source });
-    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
+    return NextResponse.json({ error: 'Missing required fields' }, {
+      status: 400,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+    
   }
 
   const prompt = `You are an expert career advisor and job analyst. Analyze the following job post and return structured JSON.
@@ -93,14 +99,42 @@ Return JSON with:
   try {
     structured = JSON.parse(completion.choices[0].message.content || '{}');
   } catch (e) {
-    return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
+    
+    return NextResponse.json({ error: 'Failed to parse AI response' }, {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
+    
   }
 
   const { data, error } = await supabase.from('jobs').insert([{ ...structured }]);
   if (error) {
     console.error('Supabase insert error:', error);
-    return NextResponse.json({ error: 'DB error' }, { status: 500 });
+    return NextResponse.json({ error: 'DB error' }, {
+      status: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      }
+    });
   }
 
-  return NextResponse.json({ success: true, data });
+  return NextResponse.json({ success: true, data }, {
+    headers: {
+      'Access-Control-Allow-Origin': '*'
+    }
+  });
+  
+}
+
+export function OPTIONS() {
+  return new NextResponse(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, x-api-key'
+    }
+  });
 }
