@@ -3,10 +3,15 @@ import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 import resume from '@/lib/resume.json';
 
-function extractJSON(raw: string): any {
+function extractInnerJSON(raw) {
   const match = raw.match(/{[\s\S]*}/);
   if (!match) throw new Error('No JSON block found');
-  return JSON.parse(match[0]);
+  
+  // Extract the inner JSON
+  const innerMatch = match[0].match(/{[\s\S]*}/);
+  if (!innerMatch) throw new Error('No inner JSON block found');
+  
+  return JSON.parse(innerMatch[0]);
 }
 
 const supabase = createClient(
@@ -82,7 +87,7 @@ Return JSON with:
 - hiring_manager (if mentioned)
 - required_experience
 - skills_sought (array)
-- company_insights (GPT’s own insights)
+- company_insights (GPT's own insights)
 - ideal_candidate (who this job is best for)
 - ai_resume_tips (strengths, gaps, suggested_bullets)
 - ai_tailored_summary (1-paragraph cover letter-style blurb)
@@ -99,7 +104,7 @@ Return JSON with:
 
   let structured;
   try {
-    structured = extractJSON(completion.choices[0].message.content || '');
+    structured = extractInnerJSON(completion.choices[0].message.content || '');
   } catch (e) {
     console.log('❌ Failed to parse JSON from OpenAI:', completion.choices[0].message.content);
     return NextResponse.json({ error: 'Failed to parse AI response' }, {
