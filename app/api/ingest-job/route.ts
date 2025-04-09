@@ -13,7 +13,6 @@ function extractJSON(raw: string): any {
   return JSON.parse(clean);
 }
 
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -67,6 +66,7 @@ Job Title: ${job_title}
 Company Name: ${company_name}
 Salary: ${salary}
 Company URL: ${company_url}
+Job Post URL: ${job_post_url}
 Job Highlights: ${job_highlights}
 Job Description:
 ${job_description}
