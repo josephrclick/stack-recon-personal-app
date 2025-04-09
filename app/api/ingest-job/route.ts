@@ -1,5 +1,3 @@
-export const runtime = 'nodejs';
-
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
@@ -12,127 +10,97 @@ const supabase = createClient(
 
 const openai = new OpenAI({ apiKey: process.env.NEXT_OPENAI_API_KEY });
 
-export function OPTIONS() {
-  return new NextResponse(null, {
-    status: 204,
-    headers: {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
-      'Access-Control-Allow-Methods': 'POST, OPTIONS'
-    }
-  });
-}
-
 export async function POST(req: NextRequest) {
   const apiKey = req.headers.get('x-api-key');
   if (apiKey !== process.env.NEXT_EXTENSION_API_KEY) {
-    return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-} });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  let html, url, source;
-  try {
-    const body = await req.json();
-    html = body.html;
-    url = body.url;
-    source = body.source || 'unknown';
+  const body = await req.json();
 
-    if (!html || !url) {
-      return new NextResponse(JSON.stringify({ error: 'Missing required fields' }), { status: 400, headers: {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-} });
-    }
-  } catch (err) {
-    console.error('Error parsing JSON body:', err);
-    return new NextResponse(JSON.stringify({ error: 'Invalid JSON body', details: err }), { status: 400, headers: {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-} });
+  console.log('📦 Received payload:', body);
+
+  
+
+  const {
+    job_post_url,
+    job_title,
+    company_name,
+	  salary,
+    job_description,
+    job_highlights,
+    source,
+    company_url,
+    company_linkedin_slug
+  } = body;
+
+  console.log('📦 Received payload:', body);
+
+  console.log({
+    job_description,
+    job_post_url,
+    source,
+    job_description_type: typeof job_description,
+  });
+
+  const isValid = [job_description, job_post_url, source].every(
+    (v) => typeof v === 'string' && v.trim().length > 0
+  );
+
+  if (!isValid) {
+    console.warn('🚨 Missing or invalid fields:', { job_description, job_post_url, source });
+    return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
   }
 
-  const prompt = `You are an AI job analyst. Given the job post HTML and resume, extract key fields and provide resume tailoring insights. Return ONLY valid JSON. Do NOT include markdown or backticks.
+  const prompt = `You are an expert career advisor and job analyst. Analyze the following job post and return structured JSON.
 
-Job Post HTML:
-${html}
+Job Title: ${job_title}
+Company Name: ${company_name}
+Salary: ${salary}
+Company URL: ${company_url}
+Job Highlights: ${job_highlights}
+Job Description:
+${job_description}
 
-Resume:
+Candidate Resume:
 ${JSON.stringify(resume)}
 
-Return JSON:
-{
-  company_name: string,
-  job_title: string,
-  overview: string,
-  job_post_url: string,
-  hiring_manager: string | null,
-  required_experience: string,
-  skills_sought: string[],
-  company_insights: string,
-  ideal_candidate: string,
-  ai_resume_tips: {
-    strengths: string[],
-    gaps: string[],
-    suggested_bullets: string[]
-  },
-  ai_tailored_summary: string,
-  ai_status_score: number (0-100)
-}`;
+Return JSON with:
+- company_name
+- job_title
+- salary (if mentioned)
+- overview (short 3-4 sentence summary of the role)
+- job_post_url
+- hiring_manager (if mentioned)
+- required_experience
+- skills_sought (array)
+- company_insights (GPT’s own insights)
+- ideal_candidate (who this job is best for)
+- ai_resume_tips (strengths, gaps, suggested_bullets)
+- ai_tailored_summary (1-paragraph cover letter-style blurb)
+- ai_status_score (0-100 match score)
+`;
 
+  const completion = await openai.chat.completions.create({
+    model: 'gpt-4o-mini',
+    temperature: 0.7,
+    messages: [
+      { role: 'user', content: prompt }
+    ]
+  });
+
+  let structured;
   try {
-    const chat = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
-      messages: [
-        { role: 'system', content: 'You are a job intelligence assistant.' },
-        { role: 'user', content: prompt }
-      ],
-      temperature: 0.3
-    });
-
-    let raw = chat.choices[0].message.content || '{}';
-    raw = raw.trim().replace(/^```json\\s*/i, '').replace(/```$/, '');
-    const responseData = JSON.parse(raw);
-
-    console.log('GPT Response:', responseData);
-
-    const insert = await supabase.from('jobs').insert({
-      ...responseData,
-      job_post_url: url,
-      source,
-      raw_html: html,
-      ai_version: 'gpt-4o-mini-v1',
-      status: 'new'
-    }).select().single();
-
-    if (insert.error) {
-      console.error('Supabase insert error:', insert.error);
-      return new NextResponse(JSON.stringify({ error: 'Supabase insert failed', details: insert.error }), { status: 500, headers: {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-} });
-    }
-
-    return new NextResponse(JSON.stringify({ success: true, job: insert.data }), {
-      status: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS'
-      }
-    });
-    
-  } catch (error) {
-    console.error('Error in processing job:', error);
-    return new NextResponse(JSON.stringify({ error: 'Failed to process job', details: error }), { status: 500, headers: {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'Content-Type, x-api-key',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS'
-} });
+    structured = JSON.parse(completion.choices[0].message.content || '{}');
+  } catch (e) {
+    return NextResponse.json({ error: 'Failed to parse AI response' }, { status: 500 });
   }
+
+  const { data, error } = await supabase.from('jobs').insert([{ ...structured }]);
+  if (error) {
+    console.error('Supabase insert error:', error);
+    return NextResponse.json({ error: 'DB error' }, { status: 500 });
+  }
+
+  return NextResponse.json({ success: true, data });
 }
