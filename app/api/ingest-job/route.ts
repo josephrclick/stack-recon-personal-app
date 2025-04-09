@@ -3,16 +3,16 @@ import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 import resume from '@/lib/resume.json';
 
-function extractInnerJSON(raw: string) {
-  const match = raw.match(/{[\s\S]*}/);
-  if (!match) throw new Error('No JSON block found');
-  
-  // Extract the inner JSON
-  const innerMatch = match[0].match(/{[\s\S]*}/);
-  if (!innerMatch) throw new Error('No inner JSON block found');
-  
-  return JSON.parse(innerMatch[0]);
+function extractJSON(raw: string): any {
+  const clean = raw
+    .replace(/^```json\s*/i, '')  // remove ```json (case insensitive)
+    .replace(/^```/, '')          // remove stray ``` if it exists
+    .replace(/```$/, '')          // remove closing ``` at end
+    .trim();
+
+  return JSON.parse(clean);
 }
+
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     
   }
 
-  const prompt = `You are an expert career advisor and job analyst. Analyze the following job post and return structured JSON.
+  const prompt = `You are an expert career advisor and job analyst. Analyze the following job post and return structured JSON. ONLY return a raw JSON object with no explanation, markdown, or commentary. Do not wrap your output in \`\`\`json..
 
 Job Title: ${job_title}
 Company Name: ${company_name}
@@ -104,7 +104,7 @@ Return JSON with:
 
   let structured;
   try {
-    structured = extractInnerJSON(completion.choices[0].message.content || '');
+    structured = extractJSON(completion.choices[0].message.content || '');
   } catch (e) {
     console.log('❌ Failed to parse JSON from OpenAI:', completion.choices[0].message.content);
     return NextResponse.json({ error: 'Failed to parse AI response' }, {
