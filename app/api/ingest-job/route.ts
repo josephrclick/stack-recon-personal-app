@@ -101,7 +101,7 @@ Return JSON with:
   try {
     structured = extractJSON(completion.choices[0].message.content || '');
   } catch (e) {
-    console.error('❌ Failed to parse JSON from OpenAI:', completion.choices[0].message.content);
+    console.log('❌ Failed to parse JSON from OpenAI:', completion.choices[0].message.content);
     return NextResponse.json({ error: 'Failed to parse AI response' }, {
       status: 500,
       headers: { 'Access-Control-Allow-Origin': '*' }
@@ -110,7 +110,8 @@ Return JSON with:
 
   const { data, error } = await supabase.from('jobs').insert([{ ...structured }]);
   if (error) {
-    console.error('Supabase insert error:', error);
+    console.error('OpenAI response:', completion.choices[0].message.content);
+    console.log('Supabase insert error:', error);
     return NextResponse.json({ error: 'DB error' }, {
       status: 500,
       headers: {
