@@ -3,7 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import OpenAI from 'openai';
 import resume from '@/lib/resume.json';
 
-function extractInnerJSON(raw) {
+function extractInnerJSON(raw: string) {
   const match = raw.match(/{[\s\S]*}/);
   if (!match) throw new Error('No JSON block found');
   
