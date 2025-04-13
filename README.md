@@ -1,134 +1,140 @@
-# 💼 AI Job Hunt Dashboard (Next.js + Supabase + OpenAI)
+# 🧠 StackRecon
 
-This is a personal, AI-powered job-hunting platform designed to streamline everything from scraping to analysis to resume/cover letter tailoring. Built with **Next.js**, **Supabase**, and **OpenAI**, it’s engineered for one very efficient user (me), with a killer combo of automation, precision, and control.
+**Scan the stack. Find the gap. Insert value.**
+
+StackRecon is a personal, AI-powered job targeting system built for precision, speed, and control. It scrapes, analyzes, enriches, and tracks job opportunities with tactical clarity — engineered for a single operator running a high-efficiency campaign.
 
 ---
 
 ## 🚀 What It Does
 
-1. Scrapes job postings via a Chrome extension.
-2. Enriches the job post with GPT-4o, using your personal resume for comparison.
-3. Stores structured data in Supabase.
-4. Displays all tracked jobs in a sleek dashboard.
-5. Highlights strengths, gaps, red flags, and even suggests resume bullets.
-6. (Soon) Generates tailored resumes and cover letters on-demand.
+1. Scrapes job descriptions via a custom Chrome Extension
+2. Enriches each job post using OpenAI and your structured resume
+3. Stores the data in Supabase with clean schema + score-based sorting
+4. Displays jobs in a fast, sortable, filterable dashboard
+5. Provides AI insight: strengths, gaps, red flags, bullet suggestions
+6. Generates downloadable PDFs: dynamic cover letters and static resumes
 
-This project is fast, solo-optimized, and proudly anti-bloat. No multi-tenant logic, no team overhead, just results.
+Everything works. MVP is done. This system is now in daily use.
 
 ---
 
 ## 🧱 Stack Overview
 
-| Layer          | Tech Stack                                                  |
-|----------------|-------------------------------------------------------------|
-| Frontend       | Next.js (App Router), React, TypeScript, Tailwind, shadcn/ui |
-| Backend        | Next.js API Routes                                          |
-| Hosting        | Vercel (with GitHub integration)                            |
-| Database       | Supabase (PostgreSQL + Row Level Security)                  |
-| Auth           | Supabase Magic Link (Single-user)                           |
-| AI Integration | OpenAI API (GPT-4o)                                         |
-| Ingestion      | Chrome Extension → `POST /api/ingest-job` (with API key)    |
-| Resume Source  | Static JSON (`/lib/resume.json`) parsed into GPT prompt     |
+| Layer        | Tech Stack                                                  |
+|--------------|-------------------------------------------------------------|
+| Frontend     | Next.js (App Router), TypeScript, Tailwind, shadcn/ui       |
+| Hosting      | Vercel                                                      |
+| Database     | Supabase (PostgreSQL + Row-Level Security)                  |
+| Auth         | Supabase Magic Link (single-user mode)                      |
+| AI Engine    | OpenAI GPT-4o API                                           |
+| Resume Input | Static JSON resume (`/lib/resume.json`)                     |
+| PDF Engine   | Puppeteer-Core + @sparticuz/chromium                        |
+| Ingestion    | Chrome Extension → API → Supabase                           |
 
 ---
 
-## ✅ Current Feature Set
+## ✅ Feature Highlights
 
-### 📡 Ingestion
+### 📡 Job Ingestion
 
-- Chrome extension scrapes:
-  - Job title, company name, job description, URL, LinkedIn slug
-- Sends JSON payload to `/api/ingest-job` using a secure `x-api-key`
-- Job description + resume are used to generate AI-enriched metadata
+- Scrapes: title, company, job description, post URL, LinkedIn slug
+- Sent to `/api/ingest-job` with secure `x-api-key`
+- Parsed into prompt alongside resume context
 
-### 🧠 AI Enrichment
+### 🧠 GPT Enrichment
 
-- GPT returns:
-  - Summary, required experience, ideal candidate, tech stack
-  - Resume alignment (strengths, gaps, bullets)
-  - Fit score (0–100), red flags, strategy tips
-- Prompt explicitly instructs GPT to *not* return fields already scraped (e.g. job_title)
+- Extracted fields:
+  - Summary, requirements, ideal candidate, tech stack
+  - Strengths, gaps, suggested resume bullets
+  - Fit score (0–100), red flags, strategy notes
 
-### 🗃 Supabase Storage
+### 🗂 Supabase Storage
 
-- Inserts combined scraped + enriched data into a single `jobs` record
-- Fields mapped to a precise schema with arrays safely normalized
+- All fields normalized and stored in `jobs` table
+- Clean insert logic with type-safe fallbacks
 
-### 📊 Dashboard
+### 📊 Dashboard UI
 
-- `/jobs` route displays all tracked jobs
-- Badges indicate AI score
-- Click "Details" to view GPT analysis
-- Action buttons to:
-  - Apply
-  - Delete
-  - (Soon) Generate resume/cover letter
-
----
-
-## 🔧 Priorities & Roadmap
-
-### 🧨 High Priority
-- [ ] Cover Letter + Resume generators
-- [ ] State management
-- [ ] Batch processing
-
-### ⚙ Medium Priority
-- [ ] Dynamic resume handling (swap between JSON configs)
-- [ ] GPT prompt enhancements (interview talking points, urgency)
-- [ ] Dashboard filtering/sorting
-
-### 🧪 Low Priority
-- [ ] CLI for scraping and batch ingestion
-- [ ] Migration tooling (Supabase CLI or drizzle)
-- [ ] Unit tests (OpenAI response parsing, Supabase insert)
+- `/jobs` page displays all tracked roles
+- Color-coded AI score badges
+- Modal: view full GPT breakdown
+- Action buttons:
+  - ✅ Apply → Updates status
+  - 🗑 Delete → Archives
+  - 📄 Cover Letter → Generates PDF via Puppeteer
+  - 📎 Resume → Downloads branded PDF with company-specific filename
 
 ---
 
-## 🧠 Prompt Strategy
+## 🛠 Current Status
 
-- Stored in `/lib/promptBuilder.ts`
-- Injects resume summary, skills, experience, preferences
-- Tells GPT:  
-  - “Here’s what the job says”  
-  - “Here’s who I am”  
-  - “Now give me actionable data”
-- Returns a clean JSON blob, ready for DB insert
+✅ MVP complete  
+✅ All APIs deployed  
+✅ Vercel production ready  
+✅ Resume + Cover Letter downloads functional  
+✅ Chrome Extension tested and connected
 
 ---
 
-## 📁 Project File Map
+## 🧪 Roadmap (Optional Enhancements)
+
+| Priority   | Feature                                  |
+|------------|-------------------------------------------|
+| High       | State management, batch ingestion         |
+| Medium     | Dynamic resume switching, GPT prompt tuning |
+| Low        | CLI tools, Supabase migration automation, unit tests
+
+---
+
+## 📁 Project Structure
 
 ```
-/app/api/ingest-job/route.ts      # Ingests scraped job, sends to GPT, saves to DB
-/app/jobs/app-jobs-page.tsx       # Dashboard UI
-/lib/promptBuilder.ts             # Builds OpenAI prompt from job + resume
-/lib/resume.json                  # Full structured resume for analysis
-/utils/supabase/                  # Supabase config & auth
-.env.local                        # Secure keys (no NEXT_PUBLIC_)
-/chrome-extension/                # Extension source (scrapes LinkedIn)
+/app/api/ingest-job/route.ts        # Ingest + enrich + insert
+/app/api/generate-cover-letter/     # Cover letter as dynamic PDF
+/app/api/generate-resume/           # Resume PDF (renamed from static file)
+/app/jobs/app-jobs-page.tsx         # Main dashboard UI
+/lib/promptBuilder.ts               # GPT prompt engine
+/lib/resume.json                    # Structured resume input
+/lib/templates/coverLetter.ts       # HTML cover letter with dynamic variables
+/public/resume/master.pdf           # Static resume asset
+/utils/supabase/                    # Supabase client helpers
+.env.local                          # Environment variables
+/chrome-extension/                  # Scraper for LinkedIn & job boards
 ```
 
 ---
 
-## ✨ Philosophy
+## 🧠 Philosophy
 
-This project is built for **high-efficiency job hunting** by a single user. It prioritizes:
-- Insight over information
-- Action over complexity
-- Automation over repetition
+This isn’t a SaaS product.  
+This is a **job-hunt war machine**.  
 
-It’s not a product (yet). It’s a job-hunt war machine.
+It’s built for single-user speed and precision, not scale.  
+It prioritizes insight over clutter, targeting over volume, and automation over repetition.  
+Everything that’s here exists to help **you land high-leverage roles faster**.
+
+---
+
+## 📌 Usage Note
+
+This repo is private and built for personal use. If you are reading this, you are special, and this repo is intended to demonstrate:
+- Drive to build, learn, grow, and win
+- Technical fluency across full stack
+- System design thinking
+- Attention to detail
+- Tooling that reflects actual value-driven job search behavior
 
 ---
 
 ## 🤝 Contributions
 
-This is a personal project and not open to external contributors (yet).  
-But if you're building something similar or want to jam on job automation tooling, I’d love to connect.
+This is a solo project.  
+Not open to public contributions — yet.  
+But if you’re building something similar or want to swap ideas, get in touch.
 
 ---
 
-## 🥂 Thanks
+## 🍻 Thanks
 
-To AI, caffeine, curiosity, and Saturday night code sessions.
+To caffeine, clean code, quiet evenings, GPT-4o, and the desire to make every application count.
