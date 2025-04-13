@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
     company_url,
     company_linkedin_slug,
     job_description,
+    salary,
     source
   } = await req.json();
 
@@ -92,6 +93,7 @@ export async function POST(req: NextRequest) {
       job_post_url,
       company_url,
       company_linkedin_slug,
+      salary,
       status: 'tracked'
     });
   
