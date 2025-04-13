@@ -15,7 +15,7 @@ export const coverLetterTemplate = `
 
     
     body {
-      font-family: 'Times New Roman', Times, serif;
+      font-family: 'EB Garamond', serif;
       font-size: 12pt;
       line-height: 1.5;
       margin: 0;
@@ -71,7 +71,7 @@ export const coverLetterTemplate = `
     }
     
     .signature-yours {
-      font-family: 'Times New Roman', Times, serif;
+      font-family: 'EB Garamond', serif;
       font-size: 12pt;
       margin-bottom: 0.1in;
     }
@@ -83,7 +83,7 @@ export const coverLetterTemplate = `
     }
     
     .signature-typed {
-      font-family: 'Times New Roman', Times, serif;
+      font-family: 'EB Garamond', serif;
       font-size: 12pt;
     }
     
@@ -120,7 +120,7 @@ export const coverLetterTemplate = `
     <p>Dear Hiring Team,</p>
     <p>I’m a Sales Engineer who builds things. I build tools, demo environments, APIs, systems, relationships, and trust. I’ve found my home in presales because it’s the rare space where technical depth meets business impact and where the best solutions come from listening closely, understanding the pain, and building something that actually solves it.</p>
     <p>At Contentsquare, I’ve led Proof of Concept projects end-to-end, crafted bespoke demo environments, and written plenty of Python, JavaScript, and SQL to make sure every stakeholder sees the value of our solutions clearly. I’ve also built internal tooling and automations that save my team hours every week, because I know great Sales Engineers scale the entire org, not just their own deals.</p>
-    <p>What draws me to {{CompanyName}} is your focus on secure, scalable solutions and the kind of technical complexity that makes the job interesting. I thrive in environments where I can get close to the product, close to the customer, and close to the truth about what really drives decisions. If there’s room on your team for someone who loves solving hard problems and making things better, I’d love to connect.</p>
+    <p>What draws me to {{companyName}} is your focus on secure, scalable solutions and the kind of technical complexity that makes the job interesting. I thrive in environments where I can get close to the product, close to the customer, and close to the truth about what really drives decisions. If there’s room on your team for someone who loves solving hard problems and making things better, I’d love to connect.</p>
   </div>
 
   <div class="signature-block">
