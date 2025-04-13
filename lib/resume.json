@@ -1,89 +1,105 @@
 {
-    "name": "Joseph R. Click",
-    "location": "San Diego, California",
-    "email": "josephrclick@gmail.com",
-    "phone": "(858) 366-8097",
-    "summary": "Technical sales engineer with experience leading presales engagements, managing proof of concepts, and bridging technical and business requirements across diverse enterprise environments.",
-    "skills": [
-      "Complex Sales Strategy",
-      "Proof of Concept Management",
-      "Technical Demo Development",
-      "Python, JavaScript, SQL, CSS, HTML",
-      "APIs, LLMs, Docker",
-      "AWS, Azure, GCP",
-      "SIEMs, Data Warehouses",
-      "Salesforce Marketing Cloud & CRM",
-      "Mobile App SDK Deployment",
-      "PowerBI, Tableau, Snowflake"
-    ],
-    "work_experience": [
-      {
-        "company": "Contentsquare",
-        "role": "Sr. Presales Solutions Consultant",
-        "location": "Remote",
-        "start_date": "September 2022",
-        "end_date": "Present",
-        "responsibilities": [
-          "Designed and delivered custom software demos addressing client-specific pain points.",
-          "Led end-to-end Proof of Concept projects to demonstrate ROI.",
-          "Integrated advanced REST APIs and cloud platforms including Salesforce, Shopify, Databricks.",
-          "Collaborated cross-functionally with engineering and product teams.",
-          "Supported sales teams and influenced product roadmap through advisory boards."
-        ]
-      },
-      {
-        "company": "Dassault Systemes - BIOVIA",
-        "role": "Customer Success Engineering Manager",
-        "location": "San Diego, CA",
-        "start_date": "March 2020",
-        "end_date": "September 2022",
-        "responsibilities": [
-          "Served as SME in presales engagements and bridged technical and business needs.",
-          "Handled technical implementations with focus on security, identity, and PII.",
-          "Managed a team of technical engineers and developed a culture of customer focus."
-        ]
-      },
-      {
-        "company": "Dassault Systemes - BIOVIA",
-        "role": "Technical Solutions Engineer - CISPro",
-        "location": "San Diego, CA",
-        "start_date": "August 2015",
-        "end_date": "March 2020",
-        "responsibilities": [
-          "Led enterprise implementation projects involving complex infrastructure and IAM.",
-          "Delivered presentations and technical documentation for high-stakes sales engagements.",
-          "Created training materials and best practices guides."
-        ]
-      },
-      {
-        "company": "Various Roles and Industries",
-        "role": "Diverse Professional Experience",
-        "location": "San Diego, CA",
-        "start_date": "May 2001",
-        "end_date": "August 2015",
-        "responsibilities": [
-          "Worked in law firms, startups, web development, logistics, and sole proprietorship.",
-          "Published a book and built experience across legal, tech, and business domains."
-        ]
-      }
-    ],
-    "education": [
-      {
-        "degree": "MBA \u2013 Information Technology Management",
-        "institution": "Western Governors University",
-        "year": 2021
-      },
-      {
-        "degree": "BS \u2013 Information Technology",
-        "institution": "Western Governors University",
-        "year": 2019
-      }
-    ],
-    "certifications": [
-      "CompTIA A+",
-      "Network+",
-      "Project+",
-      "ITIL Foundations",
-      "Site Development Associate"
-    ]
-  }
+  "name": "Joseph Click",
+  "location": "San Diego, California",
+  "email": "josephrclick@gmail.com",
+  "phone": "(858) 366-8097",
+  "linkedin": "https://www.linkedin.com/in/josephclick/",
+  "summary": "Sales Engineer and Solutions Consultant with a passion for building tools, solving hard problems, and delivering tailored technical value. Experienced in complex enterprise presales, PoC leadership, API integrations, cloud architectures, and value-based consultative selling. Strong track record of creating internal systems and automations that scale the impact of GTM teams. Equally at home in the code and in the room with executives.",
+  "skills": [
+    "Sales Engineering",
+    "Presales Strategy",
+    "Proof of Concept (PoC) Execution",
+    "Custom Demo Development",
+    "Technical Discovery",
+    "Consultative Value Selling",
+    "Python",
+    "JavaScript",
+    "SQL",
+    "REST APIs",
+    "LLMs",
+    "Docker",
+    "PowerBI",
+    "HTML/CSS",
+    "AWS",
+    "Azure",
+    "GCP",
+    "SIEMs",
+    "Snowflake",
+    "Salesforce (Marketing Cloud & CRM)",
+    "Mobile App SDK Deployment",
+    "IAM & SSO (SAML)",
+    "Security & Compliance (PII, GDPR)",
+    "Technical Enablement & Documentation",
+    "Cross-Functional Collaboration",
+    "Process Automation"
+  ],
+  "experience": [
+    {
+      "title": "Senior Presales Solutions Consultant / Sales Engineer",
+      "summary": "Led end-to-end PoC projects with enterprise and mid-market clients, from scoping to executive readout. Built and delivered tailored demo environments that showcased value through real prospect data. Created internal automations and tooling that saved the SE org 10+ hours/week. Developed integrations with platforms like Salesforce, Shopify, Braze, Adobe Target, and Databricks. Collaborated with Product and Engineering to influence roadmap and resolve blockers. Promoted MEDDPICC and Salesforce hygiene for opportunity health. Represented SEs on advisory boards and contributed to technical enablement through custom code and workflows."
+    },
+    {
+      "title": "Technical Customer Support Engineering Manager",
+      "summary": "Led a team of technical engineers supporting presales, services, and post-sales efforts. Designed onboarding and delivery processes that improved time to value and consistency. Acted as senior SME for complex security- and infrastructure-heavy sales cycles. Coordinated across Product, R&D, and CS to resolve customer-impacting issues. Delivered technical executive briefings and post-engagement analyses. Owned resolution of complex infrastructure, SSO, and app performance issues across enterprise deployments."
+    },
+    {
+      "title": "Technical Solutions Engineer",
+      "summary": "Managed and executed 60+ application and database migrations from on-prem systems to a secure cloud platform. Led discovery and technical solutioning during sales cycles. Created automation scripts and documentation that scaled internal delivery capabilities. Built internal tools and handled complex integrations using REST APIs, Python, and SQL. Supported secure deployments involving SAML SSO, Oracle/MSSQL, and virtual environments."
+    },
+    {
+      "title": "Founder / Operator / Diverse Roles",
+      "summary": "Ran a successful legal services business, handling everything from SEO to fulfillment. Worked across startups, legal, logistics, and tech. Built and optimized websites using SEO, Google Ads, and early analytics tools. Co-founded a 6-person startup and drove strategy and delivery. Developed a full-spectrum understanding of how businesses run, deliver value, and build trust with customers."
+    }
+  ],
+  "education": [
+    {
+      "degree": "MBA – Information Technology Management",
+      "institution": "Western Governors University"
+    },
+    {
+      "degree": "BS – Information Technology",
+      "institution": "Western Governors University"
+    }
+  ],
+  "certifications": [
+    "CompTIA A+",
+    "CompTIA Network+",
+    "CompTIA Project+",
+    "ITIL Foundations",
+    "Site Development Associate"
+  ],  
+  "values": [
+    "Curiosity – I constantly seek out new technologies, ideas, and ways to improve both systems and skills.",
+    "Ownership – If something needs doing, I take it on. If something’s broken, I fix it.",
+    "Clarity – Whether it’s a customer presentation or internal doc, I aim for simplicity and impact.",
+    "Trust-building – I show up prepared, follow through, and help others succeed.",
+    "Efficiency – I build tools and processes that save time and create leverage.",
+    "Bias for Action – I believe progress beats perfection, and execution trumps intention.",
+    "Technical Craft – I care about how things are built, not just what they do.",
+    "Team Empowerment – I build systems and knowledge that help my team move faster and smarter."
+  ],
+  "preferred_industries": [
+    "Cybersecurity",
+    "DevOps & Developer Tools",
+    "AI/ML platforms",
+    "Analytics / Observability",
+    "Cloud Infrastructure",
+    "Privacy & Compliance Tech",
+    "B2B SaaS",
+	"Martech",
+	"Web and mobile app ecommerce"
+  ],
+  "undesired_industries": [
+	"Healthcare",
+	"Finance",
+	"Banking",
+	"Human Resources"
+  ],	
+  "work_environment_preferences": [
+    "Cross-functional collaboration with Product, Engineering, and Sales",
+    "Ability to build internal tools and processes",
+    "Opportunities to lead PoCs and technical evaluations",
+    "Fast-moving, modern tech stack (APIs, containers, cloud-native)",
+    "Culture that rewards initiative, autonomy, and builder mindset"
+  ]
+}

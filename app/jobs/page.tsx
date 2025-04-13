@@ -49,15 +49,10 @@ interface Job {
   ai_tailored_summary: string | null;
   company_url: string | null;
   company_linkedin_slug: string | null;
-  seniority_level: string | null;
-  job_function: string | null;
-  work_arrangement: string | null;
   tech_stack: string[] | null;
-  culture_signals: string[] | null;
   red_flags: string[] | null;
-  should_apply: boolean;
   strategy_notes: string | null;
-  applied_status: boolean; 
+  status: string; // ('tracked', 'applied', 'archived')
   created_at: string;
 }
 
@@ -73,10 +68,11 @@ export default function JobsPage() {
     const fetchJobs = async () => {
       setIsLoading(true);
       setError(null);
-      // Fetch jobs, order by creation date descending if available
+      // Fetch only 'tracked' (or your default status) jobs
       const { data, error: fetchError } = await supabase
         .from('jobs')
         .select('*')
+        .eq('status', 'tracked') // Fetch only jobs with 'tracked' status
         .order('created_at', { ascending: false }); // Adjust column name if different
 
       if (fetchError) {
@@ -97,27 +93,42 @@ export default function JobsPage() {
 
   const handleViewDetails = (job: Job) => {
     setSelectedJobForDetails(job);
-    // The Dialog component below will handle opening
   };
 
-  const handleApplyToggle = async (jobId: string, currentStatus: boolean) => {
-    console.log(`Toggling applied status for job ${jobId} from ${currentStatus}`);
-    // Example: Update status in Supabase and refresh UI
-    // const { error } = await supabase.from('jobs').update({ applied_status: !currentStatus }).eq('id', jobId);
-    // if (error) console.error("Failed to update status", error);
-    // else setJobs(jobs.map(j => j.id === jobId ? { ...j, applied_status: !currentStatus } : j));
-    alert("Apply toggle functionality not implemented yet.");
+  const handleApplyToggle = async (jobId: string,) => {
+      console.log(`Marking job ${jobId} as applied`);
+      const { error } = await supabase
+        .from('jobs')
+        .update({ status: 'applied' }) // Update is_archived to true
+        .eq('id', jobId);
+
+      if (error) {
+        console.error("Failed to update job", error);
+        // Optionally, show an error message to the user
+        setError(`Failed to update job: ${error.message}`);
+      } else {
+        // Remove the job from the local state immediately for responsiveness
+        setJobs(currentJobs => currentJobs.filter(j => j.id !== jobId));
+      }
+      // alert("Delete functionality not implemented yet."); // Removed placeholder alert
   };
 
   const handleDeleteJob = async (jobId: string) => {
-    if (window.confirm("Are you sure you want to delete this job?")) {
-      console.log(`Deleting job ${jobId}`);
-      // Example: Delete from Supabase and refresh UI
-      // const { error } = await supabase.from('jobs').delete().eq('id', jobId);
-      // if (error) console.error("Failed to delete job", error);
-      // else setJobs(jobs.filter(j => j.id !== jobId));
-      alert("Delete functionality not implemented yet.");
-    }
+      console.log(`Archiving job ${jobId}`);
+      const { error } = await supabase
+        .from('jobs')
+        .update({ status: 'archived' }) // Update is_archived to true
+        .eq('id', jobId);
+
+      if (error) {
+        console.error("Failed to archive job", error);
+        // Optionally, show an error message to the user
+        setError(`Failed to archive job: ${error.message}`);
+      } else {
+        // Remove the job from the local state immediately for responsiveness
+        setJobs(currentJobs => currentJobs.filter(j => j.id !== jobId));
+      }
+      // alert("Delete functionality not implemented yet."); // Removed placeholder alert
   };
 
   const handleGenerateCoverLetter = (job: Job) => {
@@ -195,12 +206,12 @@ export default function JobsPage() {
                 </TableCell>
                 <TableCell className="text-right space-x-1">
                   <Button
-                    variant={job.applied_status ? "secondary" : "default"} // Example visual cue for applied
+                    variant="default" // Always default variant
                     size="sm"
-                    onClick={() => handleApplyToggle(job.id, job.applied_status ?? false)}
-                    title={job.applied_status ? "Mark as Not Applied" : "Mark as Applied"}
+                    onClick={() => handleApplyToggle(job.id)} 
+                    title="Mark as Applied" // Always this title
                   >
-                    {job.applied_status ? "Applied" : "Apply"}
+                    Apply {/* Always this text */}
                   </Button>
                   <Button
                     variant="secondary"

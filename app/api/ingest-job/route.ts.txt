@@ -14,12 +14,6 @@ function extractJSON(raw: string): any {
   return JSON.parse(clean);
 }
 
-function cleanFalsy(obj: Record<string, any>) {
-  return Object.fromEntries(
-    Object.entries(obj).filter(([_, v]) => v !== null && v !== undefined && v !== '')
-  );
-}
-
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -85,16 +79,11 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const jobData = cleanFalsy({
-      ...structured,
-      job_title,
-      company_name,
-      job_post_url,
-      company_url,
-      company_linkedin_slug,
-      source,
-      status: 'tracked'
-    });
+    const cleaned = Object.fromEntries(
+      Object.entries(structured).filter(([_, v]) => v !== undefined)
+    );
+  
+    const jobData = { ...cleaned, status: 'tracked' };
   
     const { data, error } = await supabase.from('jobs').insert([jobData]);
   
