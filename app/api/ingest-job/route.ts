@@ -20,6 +20,13 @@ function cleanFalsy(obj: Record<string, any>) {
   );
 }
 
+function ensureArray(value: any): string[] {
+  if (Array.isArray(value)) return value;
+  if (typeof value === 'string') return value.split(',').map(v => v.trim());
+  return [];
+}
+
+
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
@@ -84,6 +91,20 @@ export async function POST(req: NextRequest) {
       headers: { 'Access-Control-Allow-Origin': '*' }
     });
   }
+
+  const arrayFields = ['skills_sought', 'tech_stack', 'red_flags'];
+
+  for (const field of arrayFields) {
+    if (structured[field]) {
+      structured[field] = ensureArray(structured[field]);
+    }
+  }
+
+  if (structured.ai_resume_tips) {
+    structured.ai_resume_tips.strengths = ensureArray(structured.ai_resume_tips.strengths);
+    structured.ai_resume_tips.gaps = ensureArray(structured.ai_resume_tips.gaps);
+    structured.ai_resume_tips.suggested_bullets = ensureArray(structured.ai_resume_tips.suggested_bullets);
+  }  
 
   try {
     const jobData = cleanFalsy({
