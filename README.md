@@ -1,187 +1,134 @@
-# 💼 AI Job Hunt Dashboard (Next.js + Supabase Edition)
+# 💼 AI Job Hunt Dashboard (Next.js + Supabase + OpenAI)
 
-This is a personal, single-user AI-powered job hunting tool built with **Next.js**, **Supabase**, and **OpenAI**. It automates the job application workflow—scraping job posts, enriching them with GPT-4o, and storing clean structured data for dashboard management and resume generation.
+This is a personal, AI-powered job-hunting platform designed to streamline everything from scraping to analysis to resume/cover letter tailoring. Built with **Next.js**, **Supabase**, and **OpenAI**, it’s engineered for one very efficient user (me), with a killer combo of automation, precision, and control.
+
+---
+
+## 🚀 What It Does
+
+1. Scrapes job postings via a Chrome extension.
+2. Enriches the job post with GPT-4o, using your personal resume for comparison.
+3. Stores structured data in Supabase.
+4. Displays all tracked jobs in a sleek dashboard.
+5. Highlights strengths, gaps, red flags, and even suggests resume bullets.
+6. (Soon) Generates tailored resumes and cover letters on-demand.
+
+This project is fast, solo-optimized, and proudly anti-bloat. No multi-tenant logic, no team overhead, just results.
 
 ---
 
 ## 🧱 Stack Overview
 
-| Layer       | Tech Stack                                |
-|------------|--------------------------------------------|
-| Frontend   | Next.js (App Router, TypeScript)           |
-| Hosting    | Vercel                                     |
-| Database   | Supabase (PostgreSQL + RLS)                |
-| Auth       | Supabase Magic Link (Single user)          |
-| AI         | OpenAI API (GPT-4o)                        |
-| Ingestion  | Chrome Extension → `/api/ingest-job`       |
-| Resume     | JSON file injected into GPT prompt context |
-| Logging    | Debug output via `console.log` to Vercel Logs |
+| Layer          | Tech Stack                                                  |
+|----------------|-------------------------------------------------------------|
+| Frontend       | Next.js (App Router), React, TypeScript, Tailwind, shadcn/ui |
+| Backend        | Next.js API Routes                                          |
+| Hosting        | Vercel (with GitHub integration)                            |
+| Database       | Supabase (PostgreSQL + Row Level Security)                  |
+| Auth           | Supabase Magic Link (Single-user)                           |
+| AI Integration | OpenAI API (GPT-4o)                                         |
+| Ingestion      | Chrome Extension → `POST /api/ingest-job` (with API key)    |
+| Resume Source  | Static JSON (`/lib/resume.json`) parsed into GPT prompt     |
 
 ---
 
-## 📦 Features (Completed)
+## ✅ Current Feature Set
 
-- ✅ Fully hosted on Vercel with GitHub sync
-- ✅ Supabase schema created with `jobs` table
-- ✅ `resume.json` generated from PDF, stored in `/lib/`
-- ✅ `/api/ingest-job` API endpoint built using App Router (`route.ts`)
-- ✅ GPT-4o-mini generates structured job analysis with:
-  - Title, Company, Summary, Requirements
-  - Resume tips (strengths, gaps, suggested bullets)
-- ✅ Markdown formatting from GPT is sanitized before parsing
-- ✅ Records are inserted into Supabase with all enriched fields
+### 📡 Ingestion
 
----
+- Chrome extension scrapes:
+  - Job title, company name, job description, URL, LinkedIn slug
+- Sends JSON payload to `/api/ingest-job` using a secure `x-api-key`
+- Job description + resume are used to generate AI-enriched metadata
 
-## 🥪 Current Dev Status
+### 🧠 AI Enrichment
 
-✅ POST requests work via Postman  
-✅ Job posts appear in Supabase with full AI-enriched metadata  
-🔜 Next up: integrate existing Chrome Extension
+- GPT returns:
+  - Summary, required experience, ideal candidate, tech stack
+  - Resume alignment (strengths, gaps, bullets)
+  - Fit score (0–100), red flags, strategy tips
+- Prompt explicitly instructs GPT to *not* return fields already scraped (e.g. job_title)
 
----
+### 🗃 Supabase Storage
 
-## 🔧 Next Steps
+- Inserts combined scraped + enriched data into a single `jobs` record
+- Fields mapped to a precise schema with arrays safely normalized
 
-### 🔹 1. Chrome Extension Integration (in progress)
-- Connect extension POST logic to `/api/ingest-job`
-- Send `html`, `url`, and `source` with `x-api-key` header
-- Confirm end-to-end record insertion from browser job page scrape
+### 📊 Dashboard
 
-### 🔹 2. Data Enrichment Strategy
-- Expand GPT prompt to pull out more useful fields:
-  - Company mission, industry, red flags, values
-  - Ideal interview talking points
-  - Fit score or urgency rating
-- Potential for multi-step prompts or re-processing with another model
-
-### 🔹 3. Dashboard UI (Next phase)
-- Build authenticated route to view and manage jobs
-- Filter/sort by `status`, `ai_score`, company, etc.
-- Add “Generate Resume” button → tailored GPT + PDF output
+- `/jobs` route displays all tracked jobs
+- Badges indicate AI score
+- Click "Details" to view GPT analysis
+- Action buttons to:
+  - Apply
+  - Delete
+  - (Soon) Generate resume/cover letter
 
 ---
 
-## 💡 Philosophy
+## 🔧 Priorities & Roadmap
 
-This project is intentionally **solo-use**, ultra-streamlined, and optimized for speed. No user management. No multi-tenant support. Just one highly efficient human working smarter than the rest.
+### 🧨 High Priority
+- [ ] Cover Letter + Resume generators
+- [ ] State management
+- [ ] Batch processing
+
+### ⚙ Medium Priority
+- [ ] Dynamic resume handling (swap between JSON configs)
+- [ ] GPT prompt enhancements (interview talking points, urgency)
+- [ ] Dashboard filtering/sorting
+
+### 🧪 Low Priority
+- [ ] CLI for scraping and batch ingestion
+- [ ] Migration tooling (Supabase CLI or drizzle)
+- [ ] Unit tests (OpenAI response parsing, Supabase insert)
 
 ---
 
-## 📁 Project File Map (Key Files)
+## 🧠 Prompt Strategy
+
+- Stored in `/lib/promptBuilder.ts`
+- Injects resume summary, skills, experience, preferences
+- Tells GPT:  
+  - “Here’s what the job says”  
+  - “Here’s who I am”  
+  - “Now give me actionable data”
+- Returns a clean JSON blob, ready for DB insert
+
+---
+
+## 📁 Project File Map
 
 ```
-/app/api/ingest-job/route.ts   → API endpoint for ingesting HTML
-/lib/resume.json               → Structured resume for GPT context
-.env.local                     → OpenAI key, Supabase keys, API key
-/pages/                        → Future dashboard views
-/supabase/                     → Managed via web UI
+/app/api/ingest-job/route.ts      # Ingests scraped job, sends to GPT, saves to DB
+/app/jobs/app-jobs-page.tsx       # Dashboard UI
+/lib/promptBuilder.ts             # Builds OpenAI prompt from job + resume
+/lib/resume.json                  # Full structured resume for analysis
+/utils/supabase/                  # Supabase config & auth
+.env.local                        # Secure keys (no NEXT_PUBLIC_)
+/chrome-extension/                # Extension source (scrapes LinkedIn)
 ```
 
 ---
 
-## 🔐 .env Variables
+## ✨ Philosophy
 
-```env
-NEXT_PUBLIC_SUPABASE_URL=...
-NEXT_PUBLIC_SUPABASE_ANON_KEY=...
-OPENAI_API_KEY=...
-EXTENSION_API_KEY=sk-ext_xxxxxxxxxxxxxxxxx
-```
+This project is built for **high-efficiency job hunting** by a single user. It prioritizes:
+- Insight over information
+- Action over complexity
+- Automation over repetition
+
+It’s not a product (yet). It’s a job-hunt war machine.
 
 ---
 
 ## 🤝 Contributions
 
-Not open to public contributions—this is a personal R&D lab. But I’ll probably build a product out of it later 🤪
-
-# 💼 AI Job Hunt Dashboard (Next.js + Supabase Edition)
-
-This is a personal, single-user AI-powered job hunting tool built with **Next.js**, **Supabase**, and **OpenAI**. It aims to automate parts of the job application workflow—ingesting job post data (via a Chrome extension), enriching it using GPT-4o, storing structured data for dashboard management, and assisting with resume/cover letter generation.
+This is a personal project and not open to external contributors (yet).  
+But if you're building something similar or want to jam on job automation tooling, I’d love to connect.
 
 ---
 
-## 🧱 Stack Overview
+## 🥂 Thanks
 
-| Layer       | Tech Stack                                                      |
-| :---------- | :-------------------------------------------------------------- |
-| Frontend    | Next.js (App Router), React, TypeScript, Tailwind CSS, shadcn/ui |
-| Hosting     | Vercel                                                          |
-| Database    | Supabase (PostgreSQL + RLS)                                     |
-| Auth        | Supabase Auth (Email/Password)                                  |
-| AI          | OpenAI API (GPT-4o-mini)                                        |
-| Ingestion   | Chrome Extension → `/api/ingest-job` (via API Key)              |
-| Resume      | Static JSON file (`lib/resume.json`) used for GPT prompt context |
-| Logging     | Basic `console.log`/`console.error` to Vercel Logs              |
-
----
-
-## ✅ Features & Current Status
-
-* **Hosting & Deployment:** Fully hosted on Vercel with GitHub sync.
-* **Database:** Supabase project created with `jobs` table schema defined.
-* **Core API:** `/api/ingest-job` endpoint functional:
-    * Accepts job details via POST request (requires `x-api-key` header).
-    * Uses `gpt-4o-mini` to analyze job description against static resume (`lib/resume.json`).
-    * Generates structured job analysis including overview, requirements, and AI resume tips.
-    * Sanitizes AI output and inserts enriched data into the Supabase `jobs` table.
-* **Authentication:** Basic user authentication implemented using Supabase Auth (Email/Password):
-    * Sign Up, Sign In, Sign Out functionality via Server Actions.
-    * Password Reset flow implemented.
-    * Protected routes configured via Next.js Middleware.
-* **Dashboard UI:** Functional dashboard page (`/jobs`) built with `shadcn/ui`:
-    * Displays jobs fetched from Supabase in a table.
-    * Includes placeholders for action buttons (Apply, Delete, Generate Docs).
-    * Modal dialog for viewing detailed job information & AI analysis.
-
----
-
-## 🔧 Next Steps & Priorities
-
-### High Priority
-
-1.  **Chrome Extension Integration:** Connect the companion Chrome Extension to the `/api/ingest-job` endpoint to enable scraping and sending data directly from job posting pages. Ensure `x-api-key` header is included.
-2.  **Implement Dashboard Actions:** Wire up the action buttons on the dashboard:
-    * `Apply`/`Applied` toggle: Update job status in Supabase.
-    * `Delete`: Remove job record from Supabase.
-    * `Cover Letter`/`Resume`: Trigger generation (likely via new API calls or server actions).
-3.  **Dynamic Resume Management:** Replace the static `lib/resume.json`. Implement UI for uploading/editing resume content, storing it securely (e.g., associated with the user profile in Supabase), and using it dynamically in the API prompt.
-4.  **Enhance API Security:** Transition `/api/ingest-job` endpoint from static `x-api-key` authentication to using the authenticated user's Supabase session/JWT for authorization.
-
-### Medium Priority
-
-5.  **Dashboard Enhancements:** Add filtering, sorting, and potentially searching capabilities to the jobs table.
-6.  **Refine Error Handling:** Improve error handling and user feedback, especially for Server Actions (show errors in UI state instead of URL params) and API calls. Implement more structured logging.
-7.  **Configuration Management:** Move hardcoded values (like OpenAI model name, temperature) from code into environment variables.
-8.  **Testing:** Introduce automated tests (unit tests for key functions, integration tests for API/auth flows).
-
-### Low Priority
-
-9.  **Database Migrations:** Set up Supabase CLI or similar tool to manage database schema changes programmatically.
-10. **Data Enrichment:** Expand the OpenAI prompt to extract more fields (e.g., company mission, red flags, interview talking points).
-
----
-
-## 💡 Philosophy
-
-This project is intentionally **solo-use**, ultra-streamlined, and optimized for speed and personal efficiency. No complex user management or multi-tenant support.
-
----
-
-## 📁 Project File Map (Key Files)
-
-/app/api/ingest-job/route.ts # API endpoint for ingesting & processing job data
-/app/jobs/app-jobs-page.tsx  # Primary dashboard UI component
-/app/actions.ts              # Server Actions for authentication
-/middleware.ts               # Next.js middleware for auth/session handling
-/lib/resume.json             # Static structured resume for GPT context (to be replaced)
-/utils/supabase/             # Supabase client/server/middleware helpers
-/utils/utils.ts              # Utility functions (e.g., encodedRedirect)
-/components/ui/              # Shadcn/ui components
-.env.local                   # Environment variables (API keys, Supabase creds)
-
----
-
-🤝 Contributions
-
-This is currently a personal project. Contributions are not open at this time.
+To AI, caffeine, curiosity, and Saturday night code sessions.
