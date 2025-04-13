@@ -158,8 +158,7 @@ This is a personal, single-user AI-powered job hunting tool built with **Next.js
 ### Low Priority
 
 9.  **Database Migrations:** Set up Supabase CLI or similar tool to manage database schema changes programmatically.
-10. **Code Consolidation:** Refactor utility functions (consolidate `lib/utils.ts` and `utils/utils.ts`).
-11. **Data Enrichment:** Expand the OpenAI prompt to extract more fields (e.g., company mission, red flags, interview talking points).
+10. **Data Enrichment:** Expand the OpenAI prompt to extract more fields (e.g., company mission, red flags, interview talking points).
 
 ---
 
