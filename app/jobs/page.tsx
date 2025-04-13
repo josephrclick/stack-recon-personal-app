@@ -131,12 +131,33 @@ export default function JobsPage() {
       // alert("Delete functionality not implemented yet."); // Removed placeholder alert
   };
 
-  const handleGenerateCoverLetter = (job: Job) => {
-    console.log("Generating cover letter for:", job.job_title);
-    alert("Cover letter generation not implemented yet.");
-    // Logic to trigger cover letter generation (e.g., API call)
+  const handleGenerateCoverLetter = async (job: Job) => {
+    try {
+      const res = await fetch(`/api/generate-cover-letter?jobId=${job.id}`);
+  
+      if (!res.ok) {
+        throw new Error(`Server returned ${res.status}`);
+      }
+  
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+  
+      const safeCompany = job.company_name.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
+      const safeTitle = job.job_title.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
+      const filename = `Cover_Letter_-_Joseph_Click_-_${safeCompany}_${safeTitle}.pdf`;
+  
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+  
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Error generating cover letter:", err);
+      alert("Failed to generate cover letter PDF.");
+    }
   };
-
+ 
   const handleGenerateResume = (job: Job) => {
     console.log("Generating resume for:", job.job_title);
     alert("Resume generation not implemented yet.");
