@@ -143,8 +143,7 @@ export default function JobsPage() {
       const url = window.URL.createObjectURL(blob);
   
       const safeCompany = job.company_name.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
-      const safeTitle = job.job_title.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
-      const filename = `Cover_Letter_-_Joseph_Click_-_${safeCompany}_${safeTitle}.pdf`;
+      const filename = `Cover Letter of Joseph Click - ${safeCompany}.pdf`;
   
       const a = document.createElement('a');
       a.href = url;

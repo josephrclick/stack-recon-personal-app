@@ -6,7 +6,7 @@ import { coverLetterTemplate } from '@/lib/templates/coverLetter';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const jobId = searchParams.get('id');
+  const jobId = searchParams.get('jobId');
 
   if (!jobId) {
     return new NextResponse('Missing jobId', { status: 400 });
