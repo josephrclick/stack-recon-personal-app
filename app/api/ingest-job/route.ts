@@ -92,7 +92,6 @@ export async function POST(req: NextRequest) {
       job_post_url,
       company_url,
       company_linkedin_slug,
-      source,
       status: 'tracked'
     });
   
