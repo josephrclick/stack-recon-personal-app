@@ -93,7 +93,7 @@ Everything works. MVP is done. This system is now in daily use.
 /app/api/ingest-job/route.ts        # Ingest + enrich + insert
 /app/api/generate-cover-letter/     # Cover letter as dynamic PDF
 /app/api/generate-resume/           # Resume PDF (renamed from static file)
-/app/jobs/app-jobs-page.tsx         # Main dashboard UI
+/app/jobs/page.tsx                  # Main dashboard UI
 /lib/promptBuilder.ts               # GPT prompt engine
 /lib/resume.json                    # Structured resume input
 /lib/templates/coverLetter.ts       # HTML cover letter with dynamic variables

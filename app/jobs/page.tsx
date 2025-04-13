@@ -1,8 +1,9 @@
-// /app/jobs/app-jobs-page.tsx
+// /app/jobs/page.tsx
 "use client";
 
 import { createClient } from '@/utils/supabase/client'; // Use client component Supabase
 import { useEffect, useState } from 'react';
+import { QueryClient, QueryClientProvider, useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import {
   Table,
   TableBody,
@@ -57,78 +58,76 @@ interface Job {
 }
 
 export default function JobsPage() {
-  const [jobs, setJobs] = useState<Job[]>([]);
-  const [selectedJobForDetails, setSelectedJobForDetails] = useState<Job | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-
   const supabase = createClient();
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchJobs = async () => {
-      setIsLoading(true);
-      setError(null);
-      // Fetch only 'tracked' (or your default status) jobs
+  const { data: jobs, isLoading, error } = useQuery<Job[]>({
+    queryKey: ['jobs'],
+    queryFn: async () => {
       const { data, error: fetchError } = await supabase
         .from('jobs')
         .select('*')
-        .eq('status', 'tracked') // Fetch only jobs with 'tracked' status
-        .order('created_at', { ascending: false }); // Adjust column name if different
+        .eq('status', 'tracked')
+        .order('created_at', { ascending: false });
 
       if (fetchError) {
-        console.error('Error fetching jobs:', fetchError);
-        setError(`Failed to fetch jobs: ${fetchError.message}`);
-        setJobs([]);
-      } else {
-        setJobs(data || []);
+        throw new Error(`Failed to fetch jobs: ${fetchError.message}`);
       }
-      setIsLoading(false);
-    };
 
-    fetchJobs();
-  }, [supabase]); // Re-run if supabase client instance changes (though unlikely)
+      return data || [];
+    }
+  });
 
-  // --- Placeholder Action Handlers ---
-  // Replace these with actual logic calling Supabase or APIs
+  const [selectedJobForDetails, setSelectedJobForDetails] = useState<Job | null>(null);
+
+  const applyMutation = useMutation({
+    mutationFn: async (jobId: string) => {
+      const { error } = await supabase
+        .from('jobs')
+        .update({ status: 'applied' })
+        .eq('id', jobId);
+
+      if (error) {
+        throw new Error(`Failed to update job: ${error.message}`);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+    },
+    onError: (error: Error) => {
+      alert(error.message);
+    }
+  });
+
+  const deleteMutation = useMutation({
+    mutationFn: async (jobId: string) => {
+      const { error } = await supabase
+        .from('jobs')
+        .update({ status: 'archived' })
+        .eq('id', jobId);
+
+      if (error) {
+        throw new Error(`Failed to archive job: ${error.message}`);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+    },
+    onError: (error: Error) => {
+      alert(error.message);
+    }
+  });
 
   const handleViewDetails = (job: Job) => {
     setSelectedJobForDetails(job);
   };
 
-  const handleApplyToggle = async (jobId: string,) => {
-      console.log(`Marking job ${jobId} as applied`);
-      const { error } = await supabase
-        .from('jobs')
-        .update({ status: 'applied' }) // Update is_archived to true
-        .eq('id', jobId);
-
-      if (error) {
-        console.error("Failed to update job", error);
-        // Optionally, show an error message to the user
-        setError(`Failed to update job: ${error.message}`);
-      } else {
-        // Remove the job from the local state immediately for responsiveness
-        setJobs(currentJobs => currentJobs.filter(j => j.id !== jobId));
-      }
-      // alert("Delete functionality not implemented yet."); // Removed placeholder alert
+  const handleApplyToggle = (jobId: string) => {
+    applyMutation.mutate(jobId);
   };
 
-  const handleDeleteJob = async (jobId: string) => {
-      console.log(`Archiving job ${jobId}`);
-      const { error } = await supabase
-        .from('jobs')
-        .update({ status: 'archived' }) // Update is_archived to true
-        .eq('id', jobId);
-
-      if (error) {
-        console.error("Failed to archive job", error);
-        // Optionally, show an error message to the user
-        setError(`Failed to archive job: ${error.message}`);
-      } else {
-        // Remove the job from the local state immediately for responsiveness
-        setJobs(currentJobs => currentJobs.filter(j => j.id !== jobId));
-      }
-      // alert("Delete functionality not implemented yet."); // Removed placeholder alert
+  const handleDeleteJob = (jobId: string) => {
+    deleteMutation.mutate(jobId);
   };
 
   const handleGenerateCoverLetter = async (job: Job) => {
@@ -195,7 +194,7 @@ export default function JobsPage() {
        <div className="p-6">
          <Alert variant="destructive">
            <AlertTitle>Error</AlertTitle>
-           <AlertDescription>{error}</AlertDescription>
+           <AlertDescription>{error.message}</AlertDescription>
          </Alert>
        </div>
     );
@@ -207,7 +206,7 @@ export default function JobsPage() {
 
       <Dialog onOpenChange={(isOpen) => !isOpen && setSelectedJobForDetails(null)}>
         <Table>
-          <TableCaption>{jobs.length === 0 ? "No jobs found." : "A list of your tracked jobs."}</TableCaption>
+          <TableCaption>{jobs?.length === 0 ? "No jobs found." : "A list of your tracked jobs."}</TableCaption>
           <TableHeader>
             <TableRow>
               <TableHead>Company</TableHead>
@@ -219,7 +218,7 @@ export default function JobsPage() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {jobs.map((job) => (
+            {jobs?.map((job: Job) => (
               <TableRow key={job.id}>
                 <TableCell className="font-medium">{job.company_name}</TableCell>
                 <TableCell>{job.job_title}</TableCell>
