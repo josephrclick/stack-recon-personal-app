@@ -67,7 +67,6 @@ export const coverLetterTemplate = `
     }
     
     .signature-block {
-      margin-top: 0.5in;
     }
     
     .signature-yours {

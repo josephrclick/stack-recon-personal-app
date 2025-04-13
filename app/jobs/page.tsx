@@ -157,13 +157,29 @@ export default function JobsPage() {
     }
   };
  
-  const handleGenerateResume = (job: Job) => {
-    console.log("Generating resume for:", job.job_title);
-    alert("Resume generation not implemented yet.");
-    // Logic to trigger resume generation
+  const handleGenerateResume = async (job: Job) => {
+    try {
+      const res = await fetch(`/api/generate-resume?jobId=${job.id}`);
+  
+      if (!res.ok) throw new Error(`Failed to fetch resume: ${res.status}`);
+  
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+  
+      const safeCompany = job.company_name.replace(/[^\w\s-]/g, '').replace(/\s+/g, '_');
+      const filename = `Resume of Joseph Click - ${safeCompany}.pdf`;
+  
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+  
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Resume download failed:", err);
+      alert("Resume download failed.");
+    }
   };
-
-  // --- Render Logic ---
 
   if (isLoading) {
     return (
