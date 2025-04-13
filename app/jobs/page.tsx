@@ -57,7 +57,19 @@ interface Job {
   created_at: string;
 }
 
-export default function JobsPage() {
+// Create a client
+const queryClient = new QueryClient();
+
+// Wrapper component that provides the query client
+export default function JobsPageWrapper() {
+  return (
+    <QueryClientProvider client={queryClient}>
+      <JobsPage />
+    </QueryClientProvider>
+  );
+}
+
+function JobsPage() {
   const supabase = createClient();
   const queryClient = useQueryClient();
 
@@ -241,12 +253,13 @@ export default function JobsPage() {
                 </TableCell>
                 <TableCell className="text-right space-x-1">
                   <Button
-                    variant="default" // Always default variant
+                    variant="default" 
                     size="sm"
-                    onClick={() => handleApplyToggle(job.id)} 
-                    title="Mark as Applied" // Always this title
+                    onClick={() => handleApplyToggle(job.id)}
+                    title="Mark as Applied"
+                    disabled={applyMutation.isPending}
                   >
-                    Apply {/* Always this text */}
+                    {applyMutation.isPending ? "Applying..." : "Apply"}
                   </Button>
                   <Button
                     variant="secondary"
@@ -266,9 +279,10 @@ export default function JobsPage() {
                     variant="destructive"
                     size="sm"
                     onClick={() => handleDeleteJob(job.id)}
-                  >
-                    Delete
-                  </Button>
+                    disabled={deleteMutation.isPending}
+                   >
+                    {deleteMutation.isPending ? "Deleting..." : "Delete"}
+                   </Button>
                 </TableCell>
               </TableRow>
             ))}
