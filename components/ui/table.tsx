@@ -1,5 +1,5 @@
 import * as React from "react"
-
+import { Resizable, ResizeCallbackData } from "react-resizable";
 import { cn } from "@/utils/utils"
 
 const Table = React.forwardRef<
@@ -9,7 +9,7 @@ const Table = React.forwardRef<
   <div className="relative w-full overflow-auto">
     <table
       ref={ref}
-      className={cn("w-full caption-bottom text-sm", className)}
+      className={cn("w-full text-sm", className, "border-collapse")}
       {...props}
     />
   </div>
@@ -66,6 +66,45 @@ const TableRow = React.forwardRef<
 ))
 TableRow.displayName = "TableRow"
 
+interface ResizableTableHeadProps extends Omit<React.ThHTMLAttributes<HTMLTableCellElement>, 'onResize'> {
+  width: number;
+  onResize: (width: number) => void;
+}
+
+const ResizableTableHead = React.forwardRef<
+  HTMLTableCellElement,
+  ResizableTableHeadProps
+>(({ className, width, onResize, children, ...props }, ref) => {
+  const handleResize = (e: React.SyntheticEvent, data: ResizeCallbackData) => {
+    onResize(data.size.width);
+  };
+
+  return (
+    <Resizable
+      width={width}
+      height={0} // Height is managed by the table cell itself
+      onResize={handleResize}
+      draggableOpts={{ enableUserSelectHack: false }}
+      axis="x"
+      handle={<span className="absolute top-0 right-0 bottom-0 w-2 cursor-col-resize border-l border-muted cursor-col-resize" />}
+    >
+      <th
+        ref={ref}
+        className={cn(
+          "relative h-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+          className
+        )}
+        style={{ width: `${width}px` }}
+        {...props}
+      >
+        {children}
+      </th>
+    </Resizable>
+  );
+});
+ResizableTableHead.displayName = "ResizableTableHead";
+
+// Original TableHead kept for non-resizable headers if needed
 const TableHead = React.forwardRef<
   HTMLTableCellElement,
   React.ThHTMLAttributes<HTMLTableCellElement>
@@ -87,7 +126,7 @@ const TableCell = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <td
     ref={ref}
-    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0", className)}
+    className={cn("p-4 align-middle [&:has([role=checkbox])]:pr-0 border-r last:border-r-0", className)}
     {...props}
   />
 ))
@@ -111,6 +150,7 @@ export {
   TableBody,
   TableFooter,
   TableHead,
+  ResizableTableHead,
   TableRow,
   TableCell,
   TableCaption,
