@@ -1,6 +1,6 @@
 # 🧠 StackRecon
 
-**Scan the stack. Find the gap. Insert value.**
+**Scan Stack. Find Gap. Insert Value.**
 
 StackRecon is a personal, AI-powered job targeting system built for precision, speed, and control. It scrapes, analyzes, enriches, and tracks job opportunities with tactical clarity — engineered for a single operator running a high-efficiency campaign.
 
