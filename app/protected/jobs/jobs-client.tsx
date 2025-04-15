@@ -42,7 +42,7 @@ interface Job {
   tech_stack: string[] | null;
   red_flags: string[] | null;
   strategy_notes: string | null;
-  status: string; // ('tracked', 'applied', 'archived')
+  status: string;
   created_at: string;
 }
 
@@ -126,7 +126,11 @@ function JobsPage() {
     mutationFn: async (jobId: string) => {
       const { error } = await supabase
         .from('jobs')
-        .update({ status: 'applied' })
+        .update({
+          status: 'applied',
+          application_status: 'applied',
+          date_applied: new Date().toISOString()
+        })
         .eq('id', jobId);
 
       if (error) {

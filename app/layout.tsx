@@ -45,6 +45,9 @@ export default function RootLayout({
                     <div className="flex items-center gap-2">
                       <Link href={"/protected/jobs"}>Jobs</Link>
                     </div>
+                    <div className="flex items-center gap-2">
+                      <Link href={"/protected/applications"}>Applications</Link>
+                    </div>
                   </div>
                   <div className="flex items-center gap-4">
                     <ThemeSwitcher />
