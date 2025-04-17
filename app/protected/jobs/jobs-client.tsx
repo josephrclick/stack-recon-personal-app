@@ -346,11 +346,11 @@ function JobsPage() {
                 <p className="text-zinc-400">{selectedJob.company_name}{selectedJob.company_industry ? ` - (${selectedJob.company_industry})` : ''}</p>
                 <p className="text-zinc-400 mb-6">{selectedJob.salary ? `${selectedJob.salary}` : 'N/A'}</p>
                 
+                <h3 className="font-semibold mt-4">Overview</h3>
+                <p className="text-sm text-zinc-300 mb-4">{selectedJob.overview}</p>                
+                
                 <h3 className="font-semibold mt-4">AI Summary</h3>
                 <p className="text-sm text-zinc-300 mb-4">{selectedJob.ai_tailored_summary}</p>
-                
-                <h3 className="font-semibold mt-4">Overview</h3>
-                <p className="text-sm text-zinc-300 mb-4">{selectedJob.overview}</p>
                 
                 <h3 className="font-semibold mt-4">Required Experience</h3>
                 <p className="text-sm text-zinc-300 mb-4">{selectedJob.required_experience}</p>
