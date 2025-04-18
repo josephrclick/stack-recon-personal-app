@@ -349,6 +349,17 @@ function JobsPage() {
                 <h3 className="font-semibold mt-4">Overview</h3>
                 <p className="text-sm text-zinc-300 mb-4">{selectedJob.overview}</p>                
                 
+                <h3 className="font-semibold mt-4">Red Flags</h3>
+                {selectedJob.red_flags && selectedJob.red_flags.length > 0 ? (
+                  <ul className="list-disc pl-5 text-sm text-zinc-300 mb-4">
+                    {selectedJob.red_flags.map((flag, index) => (
+                      <li key={index} className="mb-1">{flag}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="text-sm text-zinc-300 mb-4">N/A</p>
+                )}
+                
                 <h3 className="font-semibold mt-4">AI Summary</h3>
                 <p className="text-sm text-zinc-300 mb-4">{selectedJob.ai_tailored_summary}</p>
                 
@@ -371,17 +382,6 @@ function JobsPage() {
                 
                 <h3 className="font-semibold mt-4">Tech Stack</h3>
                 <p className="text-sm text-zinc-300 mb-4">{selectedJob.tech_stack?.join(', ') || 'N/A'}</p>
-                
-                <h3 className="font-semibold mt-4">Red Flags</h3>
-                {selectedJob.red_flags && selectedJob.red_flags.length > 0 ? (
-                  <ul className="list-disc pl-5 text-sm text-zinc-300 mb-4">
-                    {selectedJob.red_flags.map((flag, index) => (
-                      <li key={index} className="mb-1">{flag}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-sm text-zinc-300 mb-4">N/A</p>
-                )}
                 
                 <h3 className="font-semibold mt-4">Strategy Notes</h3>
                 <p className="text-sm text-zinc-300 mb-4">{selectedJob.strategy_notes}</p>  

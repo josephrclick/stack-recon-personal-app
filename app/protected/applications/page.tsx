@@ -24,4 +24,4 @@ export default async function ApplicationsPage() {
 
   // Render the client component
   return <ApplicationsClient />;
-}
+} 
