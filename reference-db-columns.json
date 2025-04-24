@@ -1,0 +1,202 @@
+[
+    {
+      "column_name": "id",
+      "data_type": "uuid"
+    },
+    {
+      "column_name": "created_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "job_post_url",
+      "data_type": "text"
+    },
+    {
+      "column_name": "company_name",
+      "data_type": "text"
+    },
+    {
+      "column_name": "job_title",
+      "data_type": "text"
+    },
+    {
+      "column_name": "salary",
+      "data_type": "text"
+    },
+    {
+      "column_name": "overview",
+      "data_type": "text"
+    },
+    {
+      "column_name": "company_url",
+      "data_type": "text"
+    },
+    {
+      "column_name": "company_linkedin_slug",
+      "data_type": "text"
+    },
+    {
+      "column_name": "required_experience",
+      "data_type": "text"
+    },
+    {
+      "column_name": "skills_sought",
+      "data_type": "ARRAY"
+    },
+    {
+      "column_name": "ideal_candidate",
+      "data_type": "text"
+    },
+    {
+      "column_name": "ai_resume_tips",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "ai_tailored_summary",
+      "data_type": "text"
+    },
+    {
+      "column_name": "ai_status_score",
+      "data_type": "integer"
+    },
+    {
+      "column_name": "tech_stack",
+      "data_type": "ARRAY"
+    },
+    {
+      "column_name": "red_flags",
+      "data_type": "ARRAY"
+    },
+    {
+      "column_name": "strategy_notes",
+      "data_type": "text"
+    },
+    {
+      "column_name": "status",
+      "data_type": "text"
+    },
+    {
+      "column_name": "company_industry",
+      "data_type": "text"
+    },
+    {
+      "column_name": "enrichment_attempts",
+      "data_type": "integer"
+    },
+    {
+      "column_name": "enrichment_error",
+      "data_type": "text"
+    },
+    {
+      "column_name": "job_description",
+      "data_type": "text"
+    },
+    {
+      "column_name": "source",
+      "data_type": "text"
+    },
+    {
+      "column_name": "error_message",
+      "data_type": "text"
+    },
+    {
+      "column_name": "enriched_at",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "application_status",
+      "data_type": "text"
+    },
+    {
+      "column_name": "date_applied",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "application_notes",
+      "data_type": "text"
+    },
+    {
+      "column_name": "next_steps",
+      "data_type": "text"
+    },
+    {
+      "column_name": "follow_up_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "recruiter_name",
+      "data_type": "text"
+    },
+    {
+      "column_name": "recruiter_email",
+      "data_type": "text"
+    },
+    {
+      "column_name": "recruiter_interview_date",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "hiring_manager_name",
+      "data_type": "text"
+    },
+    {
+      "column_name": "hiring_manager_email",
+      "data_type": "text"
+    },
+    {
+      "column_name": "hiring_manager_interview_date",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "technical_interview_date",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "panel_interview_date",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "take_home_assignment_due_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "offer_received_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "offer_details",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "offer_status",
+      "data_type": "text"
+    },
+    {
+      "column_name": "date_archived",
+      "data_type": "timestamp with time zone"
+    },
+    {
+      "column_name": "current_interview_stage",
+      "data_type": "text"
+    },
+    {
+      "column_name": "next_step_defined",
+      "data_type": "text"
+    },
+    {
+      "column_name": "next_step_due_date",
+      "data_type": "date"
+    },
+    {
+      "column_name": "summary_ai_data",
+      "data_type": "jsonb"
+    },
+    {
+      "column_name": "strategic_leverage",
+      "data_type": "text"
+    },
+    {
+      "column_name": "strategic_interview_angle",
+      "data_type": "text"
+    }
+  ]
