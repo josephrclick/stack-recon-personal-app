@@ -1,21 +1,25 @@
 # 🧠 StackRecon
 
-**Scan Stack. Find Gap. Insert Value.**
-
-StackRecon is a personal, AI-powered job targeting system built for precision, speed, and control. It scrapes, analyzes, enriches, and tracks job opportunities with tactical clarity — engineered for a single operator running a high-efficiency campaign.
+**Scan Stack. Find Gap. Insert Value.**  
+An AI-powered job targeting system for people who take their careers seriously.
 
 ---
 
 ## 🚀 What It Does
 
-1. Scrapes job descriptions via a custom Chrome Extension
-2. Enriches each job post using OpenAI and your structured resume
-3. Stores the data in Supabase with clean schema + score-based sorting
-4. Displays jobs in a fast, sortable, filterable dashboard
-5. Provides AI insight: strengths, gaps, red flags, bullet suggestions
-6. Generates downloadable PDFs: dynamic cover letters and static resumes
+StackRecon is a tactical, full-stack, AI-augmented job war machine.
 
-Everything works. MVP is done. This system is now in daily use.
+It scrapes, analyzes, enriches, and tracks job opportunities with strategic insight and aggressive efficiency. Every record is enriched via OpenAI with custom prompt logic and scored for fit, leverage, and risk. You don’t just track jobs—you run campaigns.
+
+---
+
+## ⚙️ Workflow Overview
+
+1. **Scraping** – Chrome Extension extracts cleaned job descriptions from LinkedIn, Dice, RemoteRocketship, and more.
+2. **Batch Ingestion** – All jobs are sent via `/api/ingest-jobs-batch` (secure, tokenized).
+3. **Edge-Triggered Enrichment** – When a new job hits the `jobs` table in Supabase, an Edge Function calls OpenAI for deep enrichment using custom GPT-4o prompts.
+4. **Database Storage** – Enriched results (including red flags, strategy notes, resume tips, and interview angles) are normalized and stored in Supabase.
+5. **Dashboard Filtering** – Jobs are visualized and triaged in a responsive dashboard sorted by fit, opportunity, and risk.
 
 ---
 
@@ -25,116 +29,77 @@ Everything works. MVP is done. This system is now in daily use.
 |--------------|-------------------------------------------------------------|
 | Frontend     | Next.js (App Router), TypeScript, Tailwind, shadcn/ui       |
 | Hosting      | Vercel                                                      |
-| Database     | Supabase (PostgreSQL + Row-Level Security)                  |
-| Auth         | Supabase Magic Link (single-user mode)                      |
+| Database     | Supabase (PostgreSQL + RLS)                                 |
+| Auth         | Supabase Magic Link                                         |
 | AI Engine    | OpenAI GPT-4o API                                           |
-| Resume Input | Static JSON resume (`/lib/resume.json`)                     |
+| Resume Input | Structured JSON (`/lib/resume.json`)                        |
 | PDF Engine   | Puppeteer-Core + @sparticuz/chromium                        |
-| Ingestion    | Chrome Extension → API → Supabase                           |
+| Ingestion    | Chrome Extension → `/api/ingest-jobs-batch` → Supabase     |
+| Enrichment   | Supabase Edge Function → GPT-4o auto-enrichment             |
 
 ---
 
-## ✅ Feature Highlights
+## 💡 AI-Enriched Fields
 
-### 📡 Job Ingestion
+Each job is enriched with:
 
-- Scrapes: title, company, job description, post URL, LinkedIn slug
-- Sent to `/api/ingest-job` with secure `x-api-key`
-- Parsed into prompt alongside resume context
+- 🔎 Summary, required experience, industry, ideal candidate
+- 🧠 GPT resume tips: strengths, gaps, and suggested bullets
+- 🧮 Fit score (0–100) + tailored summary
+- 🚩 Red flags and strategy notes
+- 🔧 Tech stack + strategic leverage
+- ❓ Interview angle for psychological advantage
 
-### 🧠 GPT Enrichment
+---
 
-- Extracted fields:
-  - Summary, requirements, ideal candidate, tech stack
-  - Strengths, gaps, suggested resume bullets
-  - Fit score (0–100), red flags, strategy notes
+## 🖥 Dashboard UI Highlights
 
-### 🗂 Supabase Storage
-
-- All fields normalized and stored in `jobs` table
-- Clean insert logic with type-safe fallbacks
-
-### 📊 Dashboard UI
-
-- `/jobs` page displays all tracked roles
-- Color-coded AI score badges
-- Modal: view full GPT breakdown
+- Color-coded job cards by AI fit score
+- Full GPT insight view per job
 - Action buttons:
-  - ✅ Apply → Updates status
-  - 🗑 Delete → Archives
-  - 📄 Cover Letter → Generates PDF via Puppeteer
-  - 📎 Resume → Downloads branded PDF with company-specific filename
+  - ✅ Apply → status update
+  - 📄 Cover Letter → GPT → PDF
+  - 📎 Resume → Custom company-branded PDF
+  - 🗑 Delete → Soft archive
+- Upcoming: Interview tracker and prep sheet launchers
 
 ---
 
-## 🛠 Current Status
+## 🔥 Philosophy
 
-✅ MVP complete  
-✅ All APIs deployed  
-✅ Vercel production ready  
-✅ Resume + Cover Letter downloads functional  
-✅ Chrome Extension tested and connected
+This isn’t another SaaS job board clone.  
+This is **a custom GTM system** for your career.  
+Designed for elite job targeting. Not for scale. Not for spray-and-pray.
 
----
-
-## 🧪 Roadmap (Optional Enhancements)
-
-| Priority   | Feature                                  |
-|------------|-------------------------------------------|
-| High       | State management, batch ingestion         |
-| Medium     | Dynamic resume switching, GPT prompt tuning |
-| Low        | CLI tools, Supabase migration automation, unit tests
+- **Fast ingestion.**
+- **Smart enrichment.**
+- **Strategic execution.**
+- Built for one person. Me. And it works.
 
 ---
 
-## 📁 Project Structure
+## 🧠 Use Case
+
+You don’t skim job boards. You **run structured campaigns**.  
+You don’t read 20 JDs. You **enrich and attack 2 that matter**.  
+You don’t just apply—you **build leverage**.
+
+If you're an employer reading this, know that I build my own systems.  
+I don’t wait for the right job—I engineer my own surface area.  
+I move fast. I think strategically. And I land where I want to be.
+
+---
+
+## 📁 Repo Structure
 
 ```
-/app/api/ingest-job/route.ts        # Ingest + enrich + insert
-/app/api/generate-cover-letter/     # Cover letter as dynamic PDF
-/app/api/generate-resume/           # Resume PDF (renamed from static file)
-/app/jobs/page.tsx                  # Main dashboard UI
-/lib/promptBuilder.ts               # GPT prompt engine
-/lib/resume.json                    # Structured resume input
-/lib/templates/coverLetter.ts       # HTML cover letter with dynamic variables
-/public/resume/master.pdf           # Static resume asset
-/utils/supabase/                    # Supabase client helpers
-.env.local                          # Environment variables
-/chrome-extension/                  # Scraper for LinkedIn & job boards
+/app/api/ingest-jobs-batch/         # Ingest endpoint (replaces ingest-job)
+/app/api/generate-cover-letter/     # Cover letter PDF (dynamic GPT)
+/app/api/generate-resume/           # Resume PDF (static or GPT-aided)
+/app/jobs/page.tsx                  # Job board UI
+/lib/resume.json                    # Structured resume
+/supabase/functions/enrich-job-post/# Edge Function for GPT-4o enrichment
+/public/resume/master.pdf           # Static fallback resume
+/utils/supabase/                    # Supabase helpers
+/chrome-extension/                  # Job scraper
 ```
-
----
-
-## 🧠 Philosophy
-
-This isn’t a SaaS product.  
-This is a **job-hunt war machine**.  
-
-It’s built for single-user speed and precision, not scale.  
-It prioritizes insight over clutter, targeting over volume, and automation over repetition.  
-Everything that’s here exists to help **you land high-leverage roles faster**.
-
----
-
-## 📌 Usage Note
-
-This repo is private and built for personal use. If you are reading this, you are special, and this repo is intended to demonstrate:
-- Drive to build, learn, grow, and win
-- Technical fluency across full stack
-- System design thinking
-- Attention to detail
-- Tooling that reflects actual value-driven job search behavior
-
----
-
-## 🤝 Contributions
-
-This is a solo project.  
-Not open to public contributions — yet.  
-But if you’re building something similar or want to swap ideas, get in touch.
-
----
-
-## 🍻 Thanks
-
-To caffeine, clean code, quiet evenings, GPT-4o, and the desire to make every application count.

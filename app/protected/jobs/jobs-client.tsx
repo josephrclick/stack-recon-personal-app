@@ -44,6 +44,8 @@ interface Job {
   strategy_notes: string | null;
   status: string;
   created_at: string;
+  strategic_leverage?: string;
+  strategic_interview_angle?: string;
 }
 
 // Create a client
@@ -386,8 +388,11 @@ function JobsPage() {
                 <h3 className="font-semibold mt-4">Strategy Notes</h3>
                 <p className="text-sm text-zinc-300 mb-4">{selectedJob.strategy_notes}</p>  
                 
-
-
+                <h3 className="font-semibold mt-4">Strategic Leverage</h3>
+                <p className="text-sm text-zinc-300 mb-4">{selectedJob.strategic_leverage || 'N/A'}</p>
+                <h3 className="font-semibold mt-4">Strategic Interview Angle</h3>
+                <p className="text-sm text-zinc-300 mb-4">{selectedJob.strategic_interview_angle || 'N/A'}</p>
+                
                 {selectedJob.ai_resume_tips && (
                   <>
                     <h3 className="font-semibold mt-4">AI Resume Tips</h3>
