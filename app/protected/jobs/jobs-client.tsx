@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Loader2, ArrowUpDown } from 'lucide-react'; // Example loading icon
 
 // Define the structure of your job data, including an ID
@@ -229,14 +228,7 @@ function JobsPage() {
   }
 
   if (error) {
-    return (
-       <div className="p-6">
-         <Alert variant="destructive">
-           <AlertTitle>Error</AlertTitle>
-           <AlertDescription>{error.message}</AlertDescription>
-         </Alert>
-       </div>
-    );
+    return (console.log(error));
   }
 
   return (

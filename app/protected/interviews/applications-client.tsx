@@ -13,11 +13,9 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Select } from "@/components/ui/select";
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, ArrowUpDown, Calendar, User, Mail, Phone, Building, Briefcase, Clock, Plus, Archive, Download } from 'lucide-react';
 
@@ -272,14 +270,7 @@ function ApplicationsClient() {
   }
 
   if (error) {
-    return (
-       <div className="p-6">
-         <Alert variant="destructive">
-           <AlertTitle>Error Loading Applications</AlertTitle>
-           <AlertDescription>{error.message}</AlertDescription>
-         </Alert>
-       </div>
-    );
+    return (console.log(error));
   }
 
   const sortedJobs = jobs || [];

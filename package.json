@@ -28,7 +28,9 @@
     "puppeteer-core": "^24.6.1",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-resizable": "^3.0.5"
+    "react-resizable": "^3.0.5",
+    "pino": "^8.8.0",
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "@types/node": "22.10.2",
