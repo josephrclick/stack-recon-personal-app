@@ -228,7 +228,8 @@ function JobsPage() {
   }
 
   if (error) {
-    return (console.log(error));
+    console.log(error);
+    return <div>Error loading jobs</div>;
   }
 
   return (
